@@ -1,5 +1,19 @@
 <?php
 
+//require
+require './vendor/autoload.php';
+
+//初期化
+//.envの保存場所指定（カレントに設定）
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+$ApiKey = getenv('APIKEY');
+$DBName = getenv('DBNAME');
+$DBHost = getenv('DBHOST');
+$DBUser = getenv('DBUSER');
+$DBPassWord = getenv('DBPassWord');
+$DBInsert = getenv('DBINSERT');
+
 session_start();
 
 $img="";
@@ -20,15 +34,12 @@ if (!isset($_FILES['upfile']['error']) || !is_int($_FILES['upfile']['error'])){
             chmod( $file_dir_path . $uniq_name, 0644 );
             //echo $uniq_name . "をアップロードしました。";
             $img = '<img src =' . "$file_dir_path" . "$uniq_name" . '>';
-            //最終的にgit.ignoreに入れましょう
-            $pdo = new PDO('mysql:dbname=photoshare_map;host=localhost', 'root', '');
+            $pdo = new PDO("mysql:dbname=$DBName;host=$DBHost", "$DBUser", "$DBPassWord");
             $stmt = $pdo->query('SET NAMES utf8');
-            //INSET分のSQLインジェクション対策？
-            $stmt = $pdo->prepare("INSERT INTO ps_info (id, lat, lon, img, input_date)VALUES(NULL, :lat, :lon, :img, sysdate())");
+            $stmt = $pdo->prepare($DBInsert);
             $stmt->bindValue(':lat', $lat);
             $stmt->bindValue(':lon', $lon);
             $stmt->bindValue(':img', "images/" . $uniq_name);
-            echo 'hoge';
             $status = $stmt->execute();
 
             if($status == false){
@@ -81,8 +92,6 @@ if (!isset($_FILES['upfile']['error']) || !is_int($_FILES['upfile']['error'])){
                         var lon = position.coords.longitude;
                         $("#lat").val(lat);
                         $("#lon").val(lon);
-                        console.log(lat);
-                        console.log(lon);
                     } catch(error) {
                         console.log("getGeolocation: " + error);
                     }

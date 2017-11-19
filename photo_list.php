@@ -1,12 +1,26 @@
 <?php
 
+//require
+require './vendor/autoload.php';
+
+//初期化
+//.envの保存場所指定（カレントに設定）
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+$ApiKey = getenv('APIKEY');
+$DBName = getenv('DBNAME');
+$DBHost = getenv('DBHOST');
+$DBUser = getenv('DBUSER');
+$DBPassWord = getenv('DBPassWord');
+$DBSelect = getenv('DBSELECT');
+
 function view($val) {
     return htmlspecialchars($val, ENT_QUOTES, 'UtF-8');
 }
 
-$pdo = new PDO('mysql:dbname=photoshare_map;host=localhost', 'root', '');
+$pdo = new PDO("mysql:dbname=$DBName;host=$DBHost", "$DBUser", "$DBPassWord");
 $stmt = $pdo->query('SET NAMES utf8');
-$stmt = $pdo->prepare("SELECT * FROM ps_info");
+$stmt = $pdo->prepare($DBSelect);
 $flag = $stmt->execute();
 $view="";
 $i=0;
@@ -33,7 +47,7 @@ if($flag==false){
         </title>
         <style>#myMap {width: 600px ; height: 600px ;}</style>
         <script src="js/jquery-2.1.3.min.js"></script>
-        <script src="//maps.googleapis.com/maps/api/js?key=''"></script>
+        <script hidden="true" type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=<?php echo $ApiKey ?>"></script>
     </head>
     <body>
         <header>
@@ -44,7 +58,7 @@ if($flag==false){
             <div id="myMap"></div>
 
         <script>
-            var mapPos = document.getElementById( "myMap" );
+            var MapPos = document.getElementById( "myMap" );
             var G = {
                 point: new Array(<?=$view?>),
                 map: null,
@@ -54,7 +68,7 @@ if($flag==false){
             };
 
             function LoadMap() {
-                G.map = new google.maps.Map(mapPos, {
+                G.map = new google.maps.Map(MapPos, {
                   center: new google.maps.LatLng( G.latitude, G.longitude ) ,
                   zoom: G.zoom ,
                 });
