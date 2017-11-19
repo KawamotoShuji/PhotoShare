@@ -31,40 +31,51 @@ if($flag==false){
         <title>
             自作写真共有アプリ
         </title>
-        <style>#map_area{position: relative;height:500px;padding:20px;}#myMap{width:95%;}#myMapimg{width:100%}</style>
+        <style>#myMap {width: 600px ; height: 600px ;}</style>
         <script src="js/jquery-2.1.3.min.js"></script>
-        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol' async defer></script>
+        <script src="//maps.googleapis.com/maps/api/js?key=''"></script>
     </head>
     <body>
         <header>
             <a href="photoshare.php">カメラ／写真選択</a></li>
             <a href="photo_list.php">画像一覧</a>
         </header>
-        <div id="map_area">
+
             <div id="myMap"></div>
-        </div>
-        <div>
-            <input id="img_width_range" type="range" step="10" max="400" min="50" value="200">
-        </div>
 
         <script>
+            var mapPos = document.getElementById( "myMap" );
             var G = {
                 point: new Array(<?=$view?>),
                 map: null,
                 zoom: 14,
-                latitude: "35.660056",
-                longitude: "139.714546"
+                latitude: "35.654660",
+                longitude: "139.778634"
             };
 
-            console.log(G);
-
             function LoadMap() {
-                G.map = new Microsoft.Maps.Map($('#myMap'), {
-                    credentials: "bingmapskey",
-                    mapTypeId: Microsoft.Maps.MapTypeId.road, //.aerial, .birdseye[英語表記になる]
-                    zoom: G.zoom,
-                    center: new Microsoft.Maps.Location(G.latitude, G.longitude)
+                G.map = new google.maps.Map(mapPos, {
+                  center: new google.maps.LatLng( G.latitude, G.longitude ) ,
+                  zoom: G.zoom ,
                 });
+
+                var marker_count = G.point.length;
+                for (var i=0; i<marker_count; i++) {
+                    var locations = G.point[i];
+                    var gpoint = locations.split(",");
+
+                    console.log(gpoint);
+
+                    var marker = new google.maps.Marker( {
+  	                    map: G.map ,
+  	                    position: new google.maps.LatLng( gpoint[1], gpoint[2]) ,
+                        icon: {
+  		                      url: gpoint[0] ,
+  		                      scaledSize: new google.maps.Size( 70, 70 ) ,
+  	                    } ,
+                        label: gpoint[3],
+                    });
+                }
             }
         LoadMap();
         </script>
