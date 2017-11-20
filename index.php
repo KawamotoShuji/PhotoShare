@@ -14,4 +14,5 @@
         <div>
           Kawamotoの写真共有アプリ
         </div>
+    </body>
 </html>
