@@ -65,7 +65,7 @@ if (!isset($_FILES['upfile']['error']) || !is_int($_FILES['upfile']['error'])){
     </head>
     <body>
     <header>
-        <a href="photoshare.php">カメラ／写真選択</a></li>
+        <a href="data_input.php">カメラ／写真選択</a></li>
         <a href="photo_list.php">画像一覧</a>
     </header>
         <div>
