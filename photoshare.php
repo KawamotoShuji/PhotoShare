@@ -46,10 +46,10 @@ if (!isset($_FILES['upfile']['error']) || !is_int($_FILES['upfile']['error'])){
                 echo "SQLERROR!";
                 exit;
             }else{
-                echo "登録完了！";
+                echo "SUCCESS！";
             }
         } else {
-            echo "Error:アップロードできませんでした。";
+            echo "UploadFailed";
         }
     }
 }
