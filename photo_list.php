@@ -25,7 +25,7 @@ $flag = $stmt->execute();
 $view="";
 $i=0;
 if($flag==false){
-    $view = "SQLエラー";
+    $view = "SQLERROE";
 }else{
     while( $res = $stmt->fetch(PDO::FETCH_ASSOC)){
         if($i==0){
